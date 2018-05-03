@@ -600,6 +600,11 @@ class WireClient(object):
         random.shuffle(version_uris_shuffled)
 
         for version in version_uris_shuffled:
+            # GA expects a location and failoverLocation in ExtensionsConfig, but
+            # this is not always the case. See #1147.
+            if version.uri is None:
+                continue
+
             response = None
             if not HostPluginProtocol.is_default_channel():
                 response = self.fetch(version.uri)
